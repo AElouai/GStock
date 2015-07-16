@@ -77,8 +77,11 @@ public class Look {
 		lblNewLabel_1.setBounds(20, 70, 145, 38);
 		frame.getContentPane().add(lblNewLabel_1);
 		
-//----update S
-		initialize_comboBox();
+//----update ComBox
+		initialize_ComboBox();
+//----update F		
+//----update List
+		initialize_List();
 //----update F		
 		JList list = new JList();
 		list.setBounds(372, 70, 266, 346);
@@ -112,8 +115,14 @@ public class Look {
 		lblNewLabel_6.setBounds(175, 82, 163, 14);
 		frame.getContentPane().add(lblNewLabel_6);
 	}
+//------------------ initialize THE List to Show the data from the option in comboBox
+private void initialize_List() {
+		// TODO Auto-generated method stub
+		
+	}
 
-	private void initialize_comboBox() {
+//------------------ initialize THE comboBox to get the data
+	private void initialize_ComboBox() {
 		 Vector comboBoxItems =new Vector();
 		 java.util.List<Categorier> LCategorier = DBinit.CategorierList;
 		 for(Categorier cat : LCategorier){
