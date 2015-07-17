@@ -1,6 +1,7 @@
 package Main;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,7 +17,7 @@ public class DBinit {
 	public static List<Uniter> UniterList = new ArrayList<Uniter>();
 	public static List<Categorier> CategorierList = new ArrayList<Categorier>();
 	
-	Connection conn = ConnectionManager.getInstance().getConnection();
+	static Connection conn = ConnectionManager.getInstance().getConnection();
 
 	public DBinit() {
 		uniter();
@@ -33,7 +34,7 @@ public class DBinit {
 	    return null;
 	}
 	
-	public String findUniterName(int id) {
+	public static String findUniterName(int id) {
 	    for(Uniter unt : UniterList) {
 	        if(unt.getIduniter() == id) {
 	            return unt.getNomUniter();
@@ -49,19 +50,34 @@ public class DBinit {
 	    }
 	    return null;
 	}
+	public static int findCategorierID(String name) {
+	    for(Categorier cat : CategorierList) {
+	        if(cat.getNomCategorier() == name) {
+	            return cat.getIdcat();
+	        }
+	    }
+	    return 0;
+	}
+	
+	public static Produit findProdiutWithName(String name){
+		 for(Produit prd : ProduitList) {
+		        if(prd.getNomProduit() == name) {
+		            return prd;
+		        }
+		    }
+		return null;
+	}
 //*************************************************************************	
 	//public Vector getCategorierVector
 //*************************************************************************
-	@SuppressWarnings("unchecked")
-	public List<Produit> ListOfProduitWithCat(int id) {
+	public static List<Produit> ListOfProduitWithCat(int id) {
 		List<Produit> lprd = new ArrayList<Produit>();
 	    for(Produit prd : ProduitList) {
 	        if(prd.getIdcat() == id) {
 	            lprd.add(prd);
 	        }
-	        return (List<Produit>) prd;
 	    }
-	    return null;
+	    return lprd;
 	}
 //*************************************************************************	
 public void uniter(){
@@ -125,6 +141,36 @@ public void produit(){
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}	
+}
+
+public static Boolean updateProduit(int id,int qnt){
+	
+
+	String sql =
+			"UPDATE Produit SET " +
+			"qnt_unt = ? " +
+			"WHERE idproduit = ?";
+	try (
+//			Connection conn = DBUtil.getConnection(DBType.MYSQL);
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			){
+		
+		stmt.setInt(1, id);
+		stmt.setInt(2, qnt);
+		
+		int affected = stmt.executeUpdate();
+		if (affected == 1) {
+			new DBinit();
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	catch(SQLException e) {
+		System.err.println(e);
+		return false;
+	}
 }
 
 	

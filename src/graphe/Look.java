@@ -1,38 +1,52 @@
 package graphe;
 
-import Main.*;
-
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
 
-import java.awt.List;
-import java.awt.Button;
 import java.awt.TextField;
 
 import javax.swing.JLabel;
 
-import java.awt.Choice;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
-import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import Main.DBinit;
 import MainMagasine.Categorier;
 import MainMagasine.Produit;
-import MainMagasine.Uniter;
 
-public class Look {
+import javax.swing.JSpinner;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.Font;
+
+public class Look implements ItemListener, ListSelectionListener {
 
 	private JFrame frame;
-	private JComboBox comboBox;
-
+	private DefaultComboBoxModel<String> modelComboBox = new DefaultComboBoxModel<String>();
+	private JComboBox comboBox = new JComboBox(modelComboBox);
+	private DefaultListModel<String> modelList =  new DefaultListModel<String>();;
+	private JList list = new JList(modelList) ;
+	private JButton btnajt;
+	private JButton btnenlv;
+	private JLabel lblqnt;
+	private JLabel lblprd;
+	private JLabel lblunt1;
+	private JLabel lblunt2;
+	private Produit prd;
+	private TextField txtf;
 	/**
 	 * Launch the application.
 	 */
@@ -65,73 +79,131 @@ public class Look {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		TextField textField = new TextField();
-		textField.setBounds(10, 233, 271, 44);
-		frame.getContentPane().add(textField);
+		txtf = new TextField();
+		txtf.setBounds(10, 233, 271, 44);
+		frame.getContentPane().add(txtf);
 		
-		JLabel lblNewLabel = new JLabel("Uniter");
-		lblNewLabel.setBounds(287, 233, 75, 44);
-		frame.getContentPane().add(lblNewLabel);
+		lblunt2 = new JLabel("..");
+		lblunt2.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblunt2.setBounds(287, 233, 75, 44);
+		frame.getContentPane().add(lblunt2);
 		
-		JLabel lblNewLabel_1 = new JLabel("Categorier   :");
-		lblNewLabel_1.setBounds(20, 70, 145, 38);
-		frame.getContentPane().add(lblNewLabel_1);
-		
-//----update ComBox
+//----update ComBox List
+		//initialize_List(0);
 		initialize_ComboBox();
-//----update F		
-//----update List
-		initialize_List();
-//----update F		
-		JList list = new JList();
-		list.setBounds(372, 70, 266, 346);
+		initialize_List(1);
 		frame.getContentPane().add(list);
+		frame.getContentPane().add(comboBox);
+
+//----update F
+
 		
-		JButton btnNewButton = new JButton("Ajouter");
-		btnNewButton.setBounds(10, 362, 115, 44);
-		frame.getContentPane().add(btnNewButton);
+		btnajt = new JButton("Ajouter");
+		btnajt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int data =Integer.valueOf(txtf.getText());
+				DBinit.updateProduit(prd.getIdproduit(), data);
+				
+			}
+		});
+		btnajt.setBounds(10, 362, 115, 44);
+		frame.getContentPane().add(btnajt);
 		
-		JButton btnNewButton_1 = new JButton("Enlever");
-		btnNewButton_1.setBounds(247, 362, 115, 44);
-		frame.getContentPane().add(btnNewButton_1);
+		btnenlv = new JButton("Enlever");
+		btnenlv.setBounds(247, 362, 115, 44);
+		frame.getContentPane().add(btnenlv);
 		
-		JLabel lblNewLabel_2 = new JLabel("Produit Nam   :");
-		lblNewLabel_2.setBounds(20, 119, 145, 32);
+		JLabel lblNewLabel_2 = new JLabel("Produit :");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 31));
+		lblNewLabel_2.setBounds(10, 33, 210, 32);
 		frame.getContentPane().add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("Quantite Disponible  :");
-		lblNewLabel_3.setBounds(20, 162, 145, 20);
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		lblNewLabel_3.setBounds(10, 101, 239, 32);
 		frame.getContentPane().add(lblNewLabel_3);
 		
-		JLabel lblNewLabel_4 = new JLabel("New label");
-		lblNewLabel_4.setBounds(175, 165, 163, 14);
-		frame.getContentPane().add(lblNewLabel_4);
+		lblqnt = new JLabel("0.0");
+		lblqnt.setFont(new Font("Tahoma", Font.PLAIN, 34));
+		lblqnt.setBounds(10, 160, 271, 37);
+		frame.getContentPane().add(lblqnt);
 		
-		JLabel lblNewLabel_5 = new JLabel("New label");
-		lblNewLabel_5.setBounds(175, 128, 163, 14);
-		frame.getContentPane().add(lblNewLabel_5);
+		lblprd = new JLabel("....");
+		lblprd.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblprd.setBounds(10, 71, 352, 32);
+		frame.getContentPane().add(lblprd);
 		
-		JLabel lblNewLabel_6 = new JLabel("New label");
-		lblNewLabel_6.setBounds(175, 82, 163, 14);
-		frame.getContentPane().add(lblNewLabel_6);
+		lblunt1 = new JLabel("");
+		lblunt1.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblunt1.setBounds(287, 160, 53, 37);
+		frame.getContentPane().add(lblunt1);
 	}
+//************************ intialize the UI	
 //------------------ initialize THE List to Show the data from the option in comboBox
-private void initialize_List() {
-		// TODO Auto-generated method stub
-		
+private void initialize_List(int id) {
+//		modelList = new DefaultListModel<String>();
+		java.util.List<Produit> lprd = DBinit.ListOfProduitWithCat(id);
+		list.removeAll();
+		modelList.clear();
+		for(Produit prd : lprd){
+			modelList.addElement(prd.getNomProduit());
+		}
+		list.setBounds(372, 70, 266, 346);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		if(id != 0)
+		list.setBorder(BorderFactory.createTitledBorder
+				(BorderFactory.createLineBorder(Color.DARK_GRAY, 5), ""
+				+ comboBox.getSelectedItem().toString() , 0, 0, null, Color.RED));
+//		list.setSelectedIndex(0);
+		list.addListSelectionListener(this);
 	}
 
-//------------------ initialize THE comboBox to get the data
+//-- initialize THE comboBox to get the data
 	private void initialize_ComboBox() {
-		 Vector comboBoxItems =new Vector();
-		 java.util.List<Categorier> LCategorier = DBinit.CategorierList;
+		
+		java.util.List<Categorier> LCategorier = DBinit.CategorierList;
 		 for(Categorier cat : LCategorier){
-			 comboBoxItems.add(cat.getNomCategorier()); 
+			 modelComboBox.addElement(cat.getNomCategorier()); 
 		 }		 
-		 final DefaultComboBoxModel model = new DefaultComboBoxModel(comboBoxItems);
-		comboBox = new JComboBox(model);
+//		comboBox = new JComboBox(modelComboBox);
+		comboBox.addItemListener(this);
+		
 		comboBox.setBounds(372, 39, 266, 20);
-		frame.getContentPane().add(comboBox);
+	}
+//************************ Action 
+/*	public void actionPerformed(ActionEvent evt) {
+		if(evt.getSource().equals(comboBox)){
+			String str = (String) comboBox.getSelectedItem();
+			int id = DBinit.findCategorierID(str);
+			
+			initialize_List(id);
+		}
+	}*/
+//**************************************
 
+	@Override
+	public void itemStateChanged(ItemEvent evt) {
+		if(evt.getSource().equals(comboBox)){
+			String str = (String) comboBox.getSelectedItem();
+			int id = DBinit.findCategorierID(str);
+			initialize_List(id);
+		}		
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent evt) {
+		if(evt.getSource().equals(list)){
+			String str = (String) list.getSelectedValue();
+			if(str != null){
+				
+			prd = DBinit.findProdiutWithName(str);
+			String unt = DBinit.findUniterName(prd.getIdcat());
+			lblunt2.setText(unt);
+			lblunt1.setText(unt);
+			
+			lblprd.setText(prd.getNomProduit());
+			lblqnt.setText(String.valueOf(prd.getQnt()));;
+			}
+		}
 	}
 }

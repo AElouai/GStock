@@ -14,14 +14,14 @@ public class Main {
 	public static void main(String[] args) {
 		
 		DBinit start = new DBinit();
-		List<Produit> LProduit = DBinit.ProduitList;
+		/*List<Produit> LProduit = DBinit.ProduitList;
 		List<Uniter> LUniter = DBinit.UniterList;
 		List<Categorier> LCategorier = DBinit.CategorierList;
 		for (Produit prd : LProduit) {
 			System.out.println("produit "+ prd.getNomProduit()+"est de cat : " +start.findCategorierName(prd.getIdcat())
 					+" "+start.findUniterNameCat(prd.getIdcat()));
 		}
-		
+		*/
 		Look look = new Look();
 		look.startWindows();
 
@@ -35,7 +35,7 @@ public class Main {
 		a.setQnt(1000);
 		System.out.println("produit : "+a.getRef()+"\n cat : "+a.getCat()+"\n Qnt :"+a.getQnt()+" "+a.getUniter());
 		*/
-		ConnectionManager.getInstance().close();
+	//	ConnectionManager.getInstance().close();
 	}
 
 }
